@@ -1,2 +1,3 @@
-success 
+completed
+
 # devops-fullstack-app

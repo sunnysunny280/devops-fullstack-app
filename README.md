@@ -1,6 +1,5 @@
-A
-A
-A
-B
-B
+C
+C
+C
+snv
 # devops-fullstack-app

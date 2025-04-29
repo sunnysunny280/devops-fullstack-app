@@ -1,25 +1,63 @@
 pipeline {
     agent any
-
     environment {
-        GIT_CREDENTIALS = 'github-credentials'  // Name of the credentials
+        DOCKER_IMAGE = 'your-docker-image'  // Define any Docker image if needed
     }
-
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/sunnysunny280/devops-fullstack-app.git', credentialsId: GIT_CREDENTIALS
+                // Checkout the code from GitHub
+                git 'https://github.com/sunnysunny280/devops-fullstack-app.git'
             }
         }
-        stage('Build') {
+
+        stage('Install Dependencies') {
             steps {
+                script {
+                    // Install Docker and Docker Compose if not present (Ubuntu example)
+                    sh '''
+                    if ! command -v docker &> /dev/null; then
+                        echo "Docker not found, installing..."
+                        sudo apt update && sudo apt install -y docker.io
+                    fi
+                    if ! command -v docker-compose &> /dev/null; then
+                        echo "Docker Compose not found, installing..."
+                        sudo curl -L "https://github.com/docker/compose/releases/download/v2.19.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                        sudo chmod +x /usr/local/bin/docker-compose
+                    fi
+                    '''
+                    
+                    // Install Node.js dependencies if needed (optional)
+                    sh 'cd client && npm install'
+                    sh 'cd server && npm install'
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                // Build Docker images using docker-compose
                 sh 'docker-compose build'
             }
         }
-        stage('Deploy') {
+
+        stage('Run Docker Containers') {
             steps {
+                // Start up Docker containers in detached mode
                 sh 'docker-compose up -d'
             }
+        }
+
+        stage('Clean Up') {
+            steps {
+                // Optionally clean up resources after the build
+                sh 'docker-compose down'
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs() // Clean workspace after the build
         }
     }
 }

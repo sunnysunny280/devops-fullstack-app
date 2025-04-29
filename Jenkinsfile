@@ -34,12 +34,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Images') {
-            steps {
-                // Build Docker images using docker-compose
-                sh 'docker-compose build'
-            }
-        }
+
 
         stage('Run Docker Containers') {
             steps {

@@ -1,7 +1,8 @@
 pipeline {
     agent any
     environment {
-        GIT_CREDENTIALS = 'github-credentials'  // Name of the credentials    }
+        GIT_CREDENTIALS = 'github-credentials'  // Name of the credentials   
+    }
     stages {
         stage('Checkout') {
             steps {

@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = 'your-docker-image'  // Define any Docker image if needed
-    }
+        GIT_CREDENTIALS = 'github-credentials'  // Name of the credentials    }
     stages {
         stage('Checkout') {
             steps {

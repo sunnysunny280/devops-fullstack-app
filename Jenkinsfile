@@ -6,8 +6,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from GitHub
-                git 'https://github.com/sunnysunny280/devops-fullstack-app.git'
+                git branch: 'main', url: 'https://github.com/sunnysunny280/devops-fullstack-app.git', credentialsId: GIT_CREDENTIALS
             }
         }
 

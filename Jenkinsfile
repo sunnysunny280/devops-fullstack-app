@@ -13,18 +13,19 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Install Docker and Docker Compose if not present (Ubuntu example)
-                    sh '''
-                    if ! command -v docker &> /dev/null; then
-                        echo "Docker not found, installing..."
-                        sudo apt update && sudo apt install -y docker.io
-                    fi
-                    if ! command -v docker-compose &> /dev/null; then
-                        echo "Docker Compose not found, installing..."
-                        sudo curl -L "https://github.com/docker/compose/releases/download/v2.19.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-                        sudo chmod +x /usr/local/bin/docker-compose
-                    fi
-                    '''
+            sh '''
+            echo "Docker not found, installing..."
+            apt update && apt install -y docker.io curl
+
+            if ! command -v docker-compose &> /dev/null; then
+                echo "Docker Compose not found, installing..."
+                curl -L "https://github.com/docker/compose/releases/download/v2.19.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                chmod +x /usr/local/bin/docker-compose
+            fi
+
+            docker --version
+            docker-compose --version
+            '''
                     
                     // Install Node.js dependencies if needed (optional)
                     sh 'cd client && npm install'
